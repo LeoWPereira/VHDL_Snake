@@ -18,9 +18,9 @@ entity snake is
 end entity;
 
 architecture snake of snake is
-	signal x_snake_p1 : BodySnakeX := (0 => 9, 1 => 9, 2 => 9, 3 => 9, 4 => 9, 5 => 9, 6 => 9, 7 => 9, 8 => 9, 9 => 9, OTHERS => 0);
+	signal x_snake_p1 : BodySnakeX;--:= (0 => 9, 1 => 9, 2 => 9, 3 => 9, 4 => 9, 5 => 9, 6 => 9, 7 => 9, 8 => 9, 9 => 9, OTHERS => 0);
 	signal x_snake_p2		: BodySnakeX := (0 => 15, 1 => 15, 2 => 16,  OTHERS => 0);
-	signal y_snake_p1 : BodySnakeY := (0 => 34, 1 => 35, 2 => 36, 3 => 37, 4 => 38, 5 => 39, 6 => 40, 7 => 41, 8 => 42, 9 => 43, OTHERS => 0);  --(0 => 34, 1 => 34,  OTHERS => 0);
+	signal y_snake_p1 : BodySnakeY;-- := (0 => 34, 1 => 35, 2 => 36, 3 => 37, 4 => 38, 5 => 39, 6 => 40, 7 => 41, 8 => 42, 9 => 43, OTHERS => 0);  --(0 => 34, 1 => 34,  OTHERS => 0);
 	signal y_snake_p2		: BodySnakeY :=  (0 => 10, 1 => 11, 2 => 11,  OTHERS => 0);
 	
 	signal x_food, x_special_food		: natural range 0 to VGA_MAX_HORIZONTAL;
@@ -35,41 +35,6 @@ architecture snake of snake is
 	CONSTANT TEMPO_500MS: NATURAL := FCLK / 10;
 
 begin
-	
-	count: PROCESS(clk)
-		VARIABLE temp : INTEGER RANGE 0 TO animation_time;
-	BEGIN
-		IF (rising_edge(clk)) THEN
-			temp := temp + 1;
-			IF(temp>=animation_time-1) then 
-			temp:= 0;
-			animator <= '1';
-			ELSE animator <= '0';
-			END IF;
-		END IF;
-	END PROCESS count;
-	
-	animation_p1: PROCESS(animator)
-	
-	begin
-		IF (rising_edge(animator)) THEN
-			if(x_snake_p1(0) >= VGA_MAX_HORIZONTAL) then
-				x_snake_p1(0) <= 0;
-			else
-				x_snake_p1(0) <= x_snake_p1(0) + 1;
-			end if;
-			x_snake_p1(x_snake_p1'length - 1 downto 1) <= x_snake_p1(x_snake_p1'length - 2 downto 0);
-			
-			if(y_snake_p1(0) >= VGA_MAX_VERTICAL) then
-				y_snake_p1(0) <= 0;
-			--else
-				--x_snake_p1(0) <= x_snake_p1(0) + 1;
-			end if;
-			y_snake_p1(y_snake_p1'length - 1 downto 1) <= y_snake_p1(y_snake_p1'length - 2 downto 0);
-			
-		end if;
-	
-	end process animation_p1;
 
 	size_p1 <= 10;
 	size_p2 <= 3;
@@ -80,7 +45,13 @@ begin
 	y_special_food <= 30;
 	-- se a flag nao estiver setada, nao printa a special food
 	print_special_food <= '1';
-
+	
+	player1: entity work.player port map (
+		clk => clk,
+		direction => "01",
+		x_snake => x_snake_p1,
+		y_snake => y_snake_p1
+	);
 
 --  display VGA
 	vga: entity work.DisplayVGA PORT MAP (clk => clk,
