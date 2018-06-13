@@ -14,10 +14,12 @@ entity DisplayVGA is
 		x_snake_p1, x_snake_p2		: in BodySnakeX;
 		y_snake_p1, y_snake_p2		: in BodySnakeY;
 		
-		x_food						: in natural range 0 to VGA_MAX_HORIZONTAL;
-		y_food					 	: in natural range 0 to VGA_MAX_VERTICAL;
+		x_food, x_special_food		: in natural range 0 to VGA_MAX_HORIZONTAL;
+		y_food, y_special_food	 	: in natural range 0 to VGA_MAX_VERTICAL;
 		
-		size_p1, size_p2 			: natural range 0 to WIN_SIZE
+		size_p1, size_p2 			: in natural range 0 to WIN_SIZE;
+
+		print_special_food			: in std_logic
     );
 end;
 
@@ -78,6 +80,15 @@ begin
 				(y_screen >= (y_food*10 + 1)) and (y_screen <= (y_food*10 + 9)) then
 				red <= (others => '1');
 				green <= (others => '0');
+				blue <= (others => '0');
+				print_pixel := '1';
+			end if;
+
+			-- Special Food
+			if (x_screen >= (x_special_food*10 + 1)) and (x_screen <= (x_special_food*10 + 9)) and
+				(y_screen >= (y_special_food*10 + 1)) and (y_screen <= (y_special_food*10 + 9)) and print_special_food = '1' then
+				red <= (others => '0');
+				green <= (others => '1');
 				blue <= (others => '0');
 				print_pixel := '1';
 			end if;

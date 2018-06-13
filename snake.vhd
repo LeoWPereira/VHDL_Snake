@@ -13,7 +13,7 @@ entity snake is
 		
 		-- Modulo VGA
 		red, green, blue 				: out std_logic_vector (3 downto 0);
-      	Hsync, Vsync     				: out std_logic
+      Hsync, Vsync     				: out std_logic
 	);
 end entity;
 
@@ -21,10 +21,12 @@ architecture snake of snake is
 	signal x_snake_p1, x_snake_p2		: BodySnakeX;
 	signal y_snake_p1, y_snake_p2		: BodySnakeY;
 	
-	signal x_food						: natural range 0 to VGA_MAX_HORIZONTAL;
-	signal y_food					 	: natural range 0 to VGA_MAX_VERTICAL;
+	signal x_food, x_special_food		: natural range 0 to VGA_MAX_HORIZONTAL;
+	signal y_food, y_special_food		: natural range 0 to VGA_MAX_VERTICAL;
 	
 	signal size_p1, size_p2				: natural range 0 to WIN_SIZE;
+
+	signal print_special_food			: std_logic;
 
 	constant TMAX: NATURAL := FCLK * 5;
 	CONSTANT TEMPO_500MS: NATURAL := FCLK / 10;
@@ -50,6 +52,10 @@ begin
 	size_p2 <= 3;
 	x_food <= 20;
 	y_food <= 20;
+	x_special_food <= 30;
+	y_special_food <= 30;
+	-- se a flag nao estiver setada, nao printa a special food
+	print_special_food <= '1';
 
 -- TESTE COBRAS
 process(clk)
@@ -93,8 +99,11 @@ end process;
 										y_snake_p1 => y_snake_p1,
 										y_snake_p2 => y_snake_p2,
 										x_food => x_food,
+										x_special_food => x_special_food,
+										y_special_food => y_special_food,
 										y_food => y_food,
 										size_p1 => size_p1,
-										size_p2 => size_p2);	
+										size_p2 => size_p2,
+										print_special_food => print_special_food);	
 
 end architecture;

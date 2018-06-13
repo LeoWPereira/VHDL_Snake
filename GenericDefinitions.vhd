@@ -12,6 +12,8 @@ package GenericDefinitions is
 	constant VGA_MAX_VERTICAL	:	natural := 47;
 	constant INIT_SIZE			:	natural := 3;
 	constant WIN_SIZE 			:	natural := 10;
+	constant SPECIAL_TIME		:	natural := 20;
+	constant SPECIAL_POINTS		:	natural := 2;
 
 	type BodySnakeX is array (WIN_SIZE-1 downto 0) of integer range 0 to VGA_MAX_HORIZONTAL;
 	type BodySnakeY is array (WIN_SIZE-1 downto 0) of integer range 0 to VGA_MAX_VERTICAL;
