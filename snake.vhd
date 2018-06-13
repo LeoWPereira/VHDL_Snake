@@ -5,14 +5,15 @@ USE ieee.math_real.all;
 
 entity snake is
 		generic(
-			 animation_time : INTEGER := 10000000
+			 animation_time : INTEGER := 10000000;
+			 FCLK: NATURAL := 50_000_000
 			 );		 
 	port (
 		clk: IN STD_LOGIC;
 		
 		-- Modulo VGA
 		red, green, blue 				: out std_logic_vector (3 downto 0);
-      	Hsync, Vsync     				: out std_logic
+      Hsync, Vsync     				: out std_logic
 	);
 end entity;
 
@@ -22,12 +23,17 @@ architecture snake of snake is
 	signal y_snake_p1 : BodySnakeY := (0 => 34, 1 => 35, 2 => 36, 3 => 37, 4 => 38, 5 => 39, 6 => 40, 7 => 41, 8 => 42, 9 => 43, OTHERS => 0);  --(0 => 34, 1 => 34,  OTHERS => 0);
 	signal y_snake_p2		: BodySnakeY :=  (0 => 10, 1 => 11, 2 => 11,  OTHERS => 0);
 	
-	signal x_food						: natural range 0 to VGA_MAX_HORIZONTAL;
-	signal y_food					 	: natural range 0 to VGA_MAX_VERTICAL;
+	signal x_food, x_special_food		: natural range 0 to VGA_MAX_HORIZONTAL;
+	signal y_food, y_special_food		: natural range 0 to VGA_MAX_VERTICAL;
 	
 	signal size_p1, size_p2				: natural range 0 to WIN_SIZE;
 
 	signal animator : std_logic;
+	signal print_special_food			: std_logic;
+
+	constant TMAX: NATURAL := FCLK * 5;
+	CONSTANT TEMPO_500MS: NATURAL := FCLK / 10;
+
 begin
 	
 	count: PROCESS(clk)
@@ -64,24 +70,16 @@ begin
 		end if;
 	
 	end process animation_p1;
-	
--- Testes
---	x_snake_p1(0) <= 10;
---	y_snake_p1(0) <= 34;
---	x_snake_p2(0) <= 15;
---	y_snake_p2(0) <= 10;
---	x_snake_p1(1) <= 11;
---	y_snake_p1(1) <= 34;
---	x_snake_p2(1) <= 15;
---	y_snake_p2(1) <= 11;
---	x_snake_p2(2) <= 16;
---	y_snake_p2(2) <= 11;
---	
+
 	size_p1 <= 10;
 	size_p2 <= 3;
 	
 	x_food <= 20;
 	y_food <= 20;
+	x_special_food <= 30;
+	y_special_food <= 30;
+	-- se a flag nao estiver setada, nao printa a special food
+	print_special_food <= '1';
 
 
 --  display VGA
@@ -96,8 +94,11 @@ begin
 										y_snake_p1 => y_snake_p1,
 										y_snake_p2 => y_snake_p2,
 										x_food => x_food,
+										x_special_food => x_special_food,
+										y_special_food => y_special_food,
 										y_food => y_food,
 										size_p1 => size_p1,
-										size_p2 => size_p2);	
+										size_p2 => size_p2,
+										print_special_food => print_special_food);	
 
 end architecture;
