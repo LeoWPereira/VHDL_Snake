@@ -31,9 +31,6 @@ architecture snake of snake is
 	signal animator : std_logic;
 	signal print_special_food			: std_logic;
 
-	constant TMAX: NATURAL := FCLK * 5;
-	CONSTANT TEMPO_500MS: NATURAL := FCLK / 10;
-
 begin
 
 	size_p1 <= 10;
