@@ -87,7 +87,17 @@ begin
 end process;
 
 
---  display VGA
+-- Display VGA
+-- Para o controle do display VGA, utiliza-se dois vetores de inteiros (BodySnakeX e BodySnakeY) para cada cobra.
+-- O tamanho do display é de 640x480, sendo que cada posicao da cobra ocupa 10x10 pixels. PS: Na tela é pintado somente 9x9 pixels para ver os segmentos.
+-- Dessa forma, o jogo possui 64x48 posicoes.
+-- O display ira pintar na tela um quadrado na posicao x e y do vetor BodySnake.
+-- Por exemplo, sempre ira pintar a cabeca da cobra utilizando x_snake_p1(0) e y_snake_p1(0).
+-- Para enderecar as coordenadas da cobra, deve-se colocar um valor X entre 0 e 63 e um valor Y entre 0 e 47.
+-- O display ira pintar posicoes da cobra correspondendo ao seu tamanho (size_p1 e size_p2).
+-- Por exemplo, com um tamanho size_p1 = 2, ira pintar somente {x_snake_p1(0), y_snake_p1(0)} e {x_snake_p1(1), y_snake_p1(1)}.
+-- A comida sempre sera pintada nas coordenadas x_food e y_food.
+-- A comida especial sera pintada nas coordenadas x_special_food e y_special_food quando print_special_food for igual a 1.
 	vga: entity work.DisplayVGA PORT MAP (clk => clk,
 										Hsync => Hsync,
 										Vsync => Vsync,
@@ -105,5 +115,6 @@ end process;
 										size_p1 => size_p1,
 										size_p2 => size_p2,
 										print_special_food => print_special_food);	
+}
 
 end architecture;
