@@ -1,6 +1,7 @@
 LIBRARY ieee;
 USE ieee.std_logic_1164.all;
 USE work.GenericDefinitions.all;
+use ieee.numeric_std.all;
 USE ieee.math_real.all;
 
 entity player is
@@ -38,24 +39,24 @@ begin
 		END IF;
 	END PROCESS count;
 	
-	direction_check : PROCESS(current_direction) -- impede cobra de ir para posição oposta
+	direction_check: PROCESS(animator,direction,current_direction)
 	begin
-		if(current_direction = "00" and direction = "11") then
-			current_direction <= "00";
-		elsif (current_direction = "01" and direction = "10") then
-			current_direction <= "01";
-		elsif (current_direction = "10" and direction = "01") then
-			current_direction <= "10";
-		elsif (current_direction = "11" and direction = "00") then
-			current_direction <= "11";
-		else
-			current_direction <= direction;
-		end if;
-			
+		if(rising_edge(animator)) then
+			if(current_direction = DIRECTION_UP and direction = DIRECTION_DOWN) then
+				current_direction <= current_direction;
+			elsif(current_direction = DIRECTION_DOWN and direction = DIRECTION_UP) then
+				current_direction <= current_direction;
+			elsif(current_direction = DIRECTION_LEFT and direction = DIRECTION_RIGHT) then
+				current_direction <= current_direction;
+			elsif(current_direction = DIRECTION_RIGHT and direction = DIRECTION_LEFT) then
+				current_direction <= current_direction;
+			else
+				current_direction <= direction;
+			end if;		
+		end if;	
 	END PROCESS direction_check;
 	
 	animation: PROCESS(animator)
-	
 	begin
 		IF (rising_edge(animator)) THEN
 			if(x_snake_buffer(0) >= VGA_MAX_HORIZONTAL) then
