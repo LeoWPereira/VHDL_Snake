@@ -21,7 +21,6 @@ end entity;
 
 architecture a_player of player is
 	signal animator : 			std_logic;
-	signal current_direction : PlayerDirection;
 	signal x_snake_buffer :  	BodySnakeX := init_pos_x;
 	signal y_snake_buffer :		BodySnakeY := init_pos_y;
 begin
@@ -39,26 +38,23 @@ begin
 		END IF;
 	END PROCESS count;
 	
-	direction_check: PROCESS(animator,direction,current_direction)
-	begin
-		if(rising_edge(animator)) then
-			if(current_direction = DIRECTION_UP and direction = DIRECTION_DOWN) then
-				current_direction <= current_direction;
-			elsif(current_direction = DIRECTION_DOWN and direction = DIRECTION_UP) then
-				current_direction <= current_direction;
-			elsif(current_direction = DIRECTION_LEFT and direction = DIRECTION_RIGHT) then
-				current_direction <= current_direction;
-			elsif(current_direction = DIRECTION_RIGHT and direction = DIRECTION_LEFT) then
-				current_direction <= current_direction;
-			else
-				current_direction <= direction;
-			end if;		
-		end if;	
-	END PROCESS direction_check;
-	
 	animation: PROCESS(animator)
+	variable current_direction : PlayerDirection;
 	begin
 		IF (rising_edge(animator)) THEN
+		
+			if(current_direction = DIRECTION_UP and direction = DIRECTION_DOWN) then
+				current_direction := current_direction;
+			elsif(current_direction = DIRECTION_DOWN and direction = DIRECTION_UP) then
+				current_direction := current_direction;
+			elsif(current_direction = DIRECTION_LEFT and direction = DIRECTION_RIGHT) then
+				current_direction := current_direction;
+			elsif(current_direction = DIRECTION_RIGHT and direction = DIRECTION_LEFT) then
+				current_direction := current_direction;
+			else
+				current_direction := direction;
+			end if;	
+			
 			if(x_snake_buffer(0) >= VGA_MAX_HORIZONTAL) then
 				x_snake_buffer(0) <= 0;
 			elsif(x_snake_buffer(0) < 0) then
@@ -78,8 +74,10 @@ begin
 					y_snake_buffer(0) <= y_snake_buffer(0) - 1;
 				end if;
 			end if;
+			
 			x_snake_buffer(x_snake_buffer'length - 1 downto 1) <= x_snake_buffer(x_snake_buffer'length - 2 downto 0);
 			y_snake_buffer(y_snake_buffer'length - 1 downto 1) <= y_snake_buffer(y_snake_buffer'length - 2 downto 0);
+			
 		end if;
 	
 	end process animation;
