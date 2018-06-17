@@ -5,11 +5,13 @@ USE ieee.math_real.all;
 
 entity player is
 		generic(
-			 animation_time : INTEGER := 10000000
-			 );
+			 animation_time : INTEGER := 10000000;
+			 init_pos_x : BodySnakeX;
+			 init_pos_y : BodySnakeY
+			 );           
 		port (
 			clk : in std_logic;
-			direction : in std_logic_vector(1 downto 0);
+			direction : in PlayerDirection;
 			y_snake :  out BodySnakeY;
 			x_snake :  out BodySnakeX
 		);
@@ -17,10 +19,10 @@ end entity;
 
 
 architecture a_player of player is
-	signal animator : std_logic;
-	signal current_direction : std_logic_vector(1 downto 0);
-	signal y_snake_buffer :  BodySnakeY := (0 => 34, 1 => 35, 2 => 36, 3 => 37, 4 => 38, 5 => 39, 6 => 40, 7 => 41, 8 => 42, 9 => 43, OTHERS => 0);
-	signal x_snake_buffer :  BodySnakeX := (0 => 9, 1 => 9, 2 => 9, 3 => 9, 4 => 9, 5 => 9, 6 => 9, 7 => 9, 8 => 9, 9 => 9, OTHERS => 0);
+	signal animator : 			std_logic;
+	signal current_direction : PlayerDirection;
+	signal x_snake_buffer :  	BodySnakeX := init_pos_x;
+	signal y_snake_buffer :		BodySnakeY := init_pos_y;
 begin
 	
 	count: PROCESS(clk)
@@ -65,13 +67,13 @@ begin
 			elsif(y_snake_buffer(0) < 0) then
 				y_snake_buffer(0) <= VGA_MAX_VERTICAL-1;
 			else
-				if(current_direction = "01") then
+				if(current_direction = DIRECTION_RIGHT) then
 					x_snake_buffer(0) <= x_snake_buffer(0) + 1;
-				elsif(current_direction = "10") then
+				elsif(current_direction = DIRECTION_LEFT) then
 					x_snake_buffer(0) <= x_snake_buffer(0) - 1;
-				elsif(current_direction = "00") then
+				elsif(current_direction = DIRECTION_DOWN) then
 					y_snake_buffer(0) <= y_snake_buffer(0) + 1;
-				elsif(current_direction = "11") then
+				elsif(current_direction = DIRECTION_UP) then
 					y_snake_buffer(0) <= y_snake_buffer(0) - 1;
 				end if;
 			end if;
