@@ -35,10 +35,11 @@ architecture snake of snake is
 	
 	-- sinais da saida da colisao que indicam que o respectivo player deve aumentar de tamanho
 	signal increase_size_p1, increase_size_p2: std_logic; -- um pulso indica que houve uma colisao com a comida e, portanto, deve aumentar seu tamanho em uma unidade 
+	signal increase_size_multi_p1, increase_size_multi_p2: std_logic; -- um pulso indica que houve uma colisao com a comida e, portanto, deve aumentar seu tamanho em uma unidade 
 
 begin
 
-	--size_p1 <= 10;
+	--size_p1 <= 3;
 	--size_p2 <= 3;
 	
 	x_food <= 20;
@@ -56,6 +57,7 @@ begin
 	port map (
 		clk => clk,
 		increase_size => increase_size_p1,
+		increase_size_multi => increase_size_multi_p1,
 		direction => direction_player1,
 		x_snake => x_snake_p1,
 		y_snake => y_snake_p1,
@@ -70,6 +72,7 @@ begin
 	port map (
 		clk => clk,
 		increase_size => increase_size_p2,
+		increase_size_multi => increase_size_multi_p2,
 		direction => direction_player2,
 		x_snake => x_snake_p2,
 		y_snake => y_snake_p2,
@@ -80,7 +83,7 @@ begin
 	port map (
 		input => increase_size_btn,
 		clock => clk,
-		output => increase_size_p1
+		output => increase_size_multi_p1
 	);
 
 -- Display VGA

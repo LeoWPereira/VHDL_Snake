@@ -13,10 +13,12 @@ entity player is
 		port (
 			clk : 			in std_logic;
 			increase_size: in std_logic; -- sinal correspondente a um pulso, que indica que a cobra deve aumentar seu tamanho, no momento da colisao
+			increase_size_multi: in std_logic; -- sinal correspondente a um pulso, que indica que a cobra deve aumentar seu tamanho, no momento da colisao
 			direction : 	in PlayerDirection;
 			y_snake :  		out BodySnakeY;
 			x_snake :  		out BodySnakeX;
-			current_size : out natural range 0 to WIN_SIZE -- retorna sempre o tamanho atual do player
+			current_size : out natural range 0 to WIN_SIZE; -- retorna sempre o tamanho atual do player
+			game_won :		out std_logic
 		);
 end entity;
 
@@ -48,6 +50,16 @@ begin
 			IF increase_size = '1' THEN
 				my_size <= my_size + 1; -- incrementa o tamanho
 			END IF;
+			
+			IF my_size >= WIN_SIZE THEN
+				game_won <= '1';
+				my_size <= INIT_SIZE; -- TIRAR ESSA PORRA
+			END IF;
+			
+			IF increase_size_multi = '1' THEN
+				my_size <= my_size + SPECIAL_INCREASE_SIZE; -- incrementa o tamanho
+			END IF;
+			
 		END IF;
 	END PROCESS size;
 	
